@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build
+dist/
+build/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+
+# Firebase Keys
+firebase-admin-key.json
+firebase-admin-key.json.json
+firebaseAdminKey.json
+
+# Tunnel
+cloudflared.exe
+tunnel.log
+
+# Coverage
+coverage/
+
+# Vercel
+.vercel/
+
+# Turbo
+.turbo/
+
+# Cache
+.cache/
+.eslintcache
+
+# Misc
+*.pem
