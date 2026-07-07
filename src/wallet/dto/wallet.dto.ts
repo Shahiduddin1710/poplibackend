@@ -7,14 +7,11 @@ export class RechargeDto {
   amount: number;
 
   @ApiProperty()
-  @IsNumber()
-  coins: number;
-
-  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   paymentReference: string;
 }
+
 export class WithdrawDto {
   @ApiProperty()
   @IsNumber()
