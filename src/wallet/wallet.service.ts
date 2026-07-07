@@ -421,8 +421,7 @@ private async checkReferralUnlockEligibility(
     });
   }
 
-  async rechargeCoins(userId: string, dto: RechargeDto) {
-    // Legacy support for coin recharge
+async rechargeCoins(userId: string, dto: RechargeDto) {
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const wallet = await tx.wallet.findUnique({ where: { userId } });
       if (!wallet) throw new BadRequestException('Wallet not found');
@@ -432,7 +431,8 @@ private async checkReferralUnlockEligibility(
           walletId: wallet.id,
           type: 'COIN_RECHARGE',
           amount: dto.amount,
-          currency: 'COINS',
+          coinsCredited: dto.coins,
+          currency: 'INR',
           status: 'SUCCESS',
           referenceId: dto.paymentReference,
         },
@@ -440,7 +440,7 @@ private async checkReferralUnlockEligibility(
 
       return tx.wallet.update({
         where: { id: wallet.id },
-        data: { coinBalance: { increment: dto.amount } },
+        data: { coinBalance: { increment: dto.coins } },
       });
     });
   }

@@ -394,11 +394,12 @@ model Wallet {
 }
 
 model Transaction {
-  id          String            @id @default(uuid())
-  walletId    String
-  type        TransactionType
-  amount      Float
-  currency    Currency
+  id            String            @id @default(uuid())
+  walletId      String
+  type          TransactionType
+  amount        Float
+  coinsCredited Int?
+  currency      Currency
   description String?
   status      TransactionStatus @default(PENDING)
   referenceId String?
