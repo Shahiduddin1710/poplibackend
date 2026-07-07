@@ -3,7 +3,8 @@ import {
   UnauthorizedException,
   BadRequestException,
   ConflictException,
-  TooManyRequestsException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -262,6 +263,22 @@ async googleLogin(dto: GoogleLoginDto, ip: string, userAgent: string) {
 
     if (user && user.isBlocked) {
       throw new BadRequestException('Your account has been restricted. Please contact support.');
+    }
+
+   if (user && user.isProfileComplete) {
+      // Existing user with complete profile - skip onboarding
+    } else if (user && !user.isProfileComplete) {
+      // Check auto-complete criteria
+      const interests = await this.prisma.user.findUnique({
+        where: { id: user.id },
+        include: { interests: true }
+      });
+     if ((interests?.interests?.length ?? 0) > 0 && user.name && user.name !== 'Popli User') {
+        user = await this.prisma.user.update({
+          where: { id: user.id },
+          data: { isProfileComplete: true }
+        });
+      }
     }
 
     if (!user) {
@@ -597,7 +614,7 @@ async sendOtp(dto: SendOtpDto) {
       where: { email, createdAt: { gte: tenMinutesAgo } },
     });
     if (recentCount >= 3) {
-      throw new TooManyRequestsException('Too many OTP requests. Please wait 10 minutes before trying again.');
+     throw new HttpException('Too many OTP requests. Please wait 10 minutes before trying again.', HttpStatus.TOO_MANY_REQUESTS);
     }
 
     await this.prisma.emailOtp.updateMany({
